@@ -1,15 +1,13 @@
-name: automerge
+name: Automerge
+
 on:
   pull_request:
     types:
-      - labeled
-      - unlabeled
-      - synchronize
       - opened
-      - edited
-      - ready_for_review
       - reopened
-      - unlocked
+      - synchronize
+      - labeled
+      - ready_for_review
   pull_request_review:
     types:
       - submitted
@@ -17,20 +15,34 @@ on:
     types:
       - completed
   status: {}
+
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: (contains(github.event.pull_request.labels.*.name, 'automerge') || contains(github.event.pull_request.labels.*.name, 'autosquash')) && (github.repository == 'github/docs-internal' || github.repository == 'github/docs')
+
+    # Run only when PR has the "automerge" label
+    if: contains(github.event.pull_request.labels.*.name, 'automerge')
+
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
-      - name: automerge
-        uses: 'pascalgn/automerge-action@c9bd182'
+      - name: Automerge pull request
+        uses: pascalgn/automerge-action@v0.16.4
         env:
-          GITHUB_TOKEN: '${{ secrets.OCTOMERGER_PAT_WITH_REPO_AND_WORKFLOW_SCOPE }}'
-          MERGE_METHOD_LABELS: 'automerge=merge,autosquash=squash'
-          MERGE_COMMIT_MESSAGE: 'pull-request-title'
-          MERGE_METHOD: 'merge'
-          MERGE_FORKS: 'true'
-          MERGE_RETRIES: '50'
-          MERGE_RETRY_SLEEP: '10000' # ten seconds
-          UPDATE_LABELS: 'automerge,autosquash'
-          UPDATE_METHOD: 'merge'
+          # Default GitHub token (no custom secret needed)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Merge behavior
+          MERGE_METHOD: merge
+          MERGE_METHOD_LABELS: automerge=merge
+          MERGE_COMMIT_MESSAGE: pull-request-title
+
+          # Safety settings
+          MERGE_FORKS: false
+          MERGE_RETRIES: 20
+          MERGE_RETRY_SLEEP: 5000
+
+          # Label handling
+          UPDATE_LABELS: automerge
