@@ -103,8 +103,8 @@
     "webpack-cli": "^3.3.12"
   },
   "devDependencies": {
-    "@actions/core": "^1.2.6",
-    "ajv": "^6.11.0",
+    "@actions/core": "^2.0.1",
+    "ajv": "^8.17.1",
     "async": "^3.2.2",
     "await-sleep": "0.0.1",
     "aws-sdk": "^2.610.0",
@@ -156,7 +156,7 @@
     "start-server-and-test": "^1.11.3",
     "supertest": "^4.0.2",
     "url-template": "^2.0.8",
-    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-middleware": "^7.4.5",
     "website-scraper": "^4.2.0"
   },
   "scripts": {
